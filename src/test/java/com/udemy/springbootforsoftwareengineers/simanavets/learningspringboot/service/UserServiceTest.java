@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -43,12 +44,40 @@ public class UserServiceTest {
 
         given(fakeDataDao.selectAllUsers()).willReturn(users);
 
-        List<User> allUsers = userService.getAllUsers();
+        List<User> allUsers = userService.getAllUsers(Optional.empty());
 
         assertThat(allUsers).hasSize(1);
 
         User user = allUsers.get(0);
-        assertUserFields(user);
+        assertAnnaFields(user);
+    }
+
+    @Test
+    public void shouldGetAllUsersByGender() {
+        UUID annaUserUid = UUID.randomUUID();
+        User anna = new User(annaUserUid,
+                "Anna", "Montana", User.Gender.FEMALE, 20, "anna.montana@spring.org");
+
+        UUID joeUserUid = UUID.randomUUID();
+        User joe = new User(joeUserUid,
+                "Joe", "Jones", User.Gender.MALE, 30, "joe.jones@spring.org");
+
+        ArrayList<User> users = new ArrayList<>();
+        users.add(anna);
+        users.add(joe);
+
+        given(fakeDataDao.selectAllUsers()).willReturn(users);
+
+        List<User> filteredUsers = userService.getAllUsers(Optional.of("female"));
+        assertThat(filteredUsers).hasSize(1);
+        assertAnnaFields(filteredUsers.get(0));
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenGenderIsInvalid() {
+        assertThatThrownBy(() -> userService.getAllUsers(Optional.of("invalidGender")))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Invalid gender");
     }
 
     @Test
@@ -63,7 +92,7 @@ public class UserServiceTest {
         assertThat(optionalUser).isPresent();
 
         User user = optionalUser.get();
-        assertUserFields(user);
+        assertAnnaFields(user);
     }
 
     @Test
@@ -79,7 +108,7 @@ public class UserServiceTest {
         verify(fakeDataDao).insertUser(any(UUID.class), captor.capture());
 
         User user = captor.getValue();
-        assertUserFields(user);
+        assertAnnaFields(user);
 
         assertThat(insertResult).isEqualTo(1);
     }
@@ -116,12 +145,12 @@ public class UserServiceTest {
         verify(fakeDataDao).updateUser(captor.capture());
 
         User user = captor.getValue();
-        assertUserFields(user);
+        assertAnnaFields(user);
 
         assertThat(updateResult).isEqualTo(1);
     }
 
-    private void assertUserFields(User user) {
+    private void assertAnnaFields(User user) {
         assertThat(user.getAge()).isEqualTo(20);
         assertThat(user.getFirstName()).isEqualTo("Anna");
         assertThat(user.getLastName()).isEqualTo("Montana");
