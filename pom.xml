@@ -46,6 +46,12 @@
 			<version>2.0.1.Final</version>
 			<scope>runtime</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-client</artifactId>
+			<version>3.6.1.Final</version>
+		</dependency>
 	</dependencies>
 
 	<build>
