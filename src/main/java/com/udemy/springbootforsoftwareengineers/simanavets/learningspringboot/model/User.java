@@ -1,11 +1,12 @@
 package com.udemy.springbootforsoftwareengineers.simanavets.learningspringboot.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
     private final UUID userUid;
@@ -30,17 +31,14 @@ public class User {
         this.email = email;
     }
 
-    @JsonProperty("id")
     public UUID getUserUid() {
         return userUid;
     }
 
-    @JsonIgnore
     public String getFirstName() {
         return firstName;
     }
 
-    @JsonIgnore
     public String getLastName() {
         return lastName;
     }

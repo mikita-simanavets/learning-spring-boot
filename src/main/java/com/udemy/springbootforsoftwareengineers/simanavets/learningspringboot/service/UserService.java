@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.udemy.springbootforsoftwareengineers.simanavets.learningspringboot.model.User.*;
+import static com.udemy.springbootforsoftwareengineers.simanavets.learningspringboot.model.User.Gender;
 
 @Service
 public class UserService {
@@ -42,7 +42,7 @@ public class UserService {
     }
 
     public int insertUser(User user) {
-        UUID userUid = UUID.randomUUID();
+        UUID userUid = user.getUserUid() == null ? UUID.randomUUID() : user.getUserUid();
         return userDao.insertUser(userUid, User.newUser(userUid, user));
     }
 
