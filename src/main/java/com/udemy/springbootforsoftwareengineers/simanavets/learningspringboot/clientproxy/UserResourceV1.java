@@ -3,7 +3,6 @@ package com.udemy.springbootforsoftwareengineers.simanavets.learningspringboot.c
 import com.udemy.springbootforsoftwareengineers.simanavets.learningspringboot.model.User;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
 

@@ -97,7 +97,8 @@ public class UserServiceTest {
 
     @Test
     public void shouldInsertUser() {
-        User anna = new User(null,
+        UUID userUid = UUID.randomUUID();
+        User anna = new User(userUid,
                 "Anna", "Montana", User.Gender.FEMALE, 20, "anna.montana@spring.org");
         given(fakeDataDao.insertUser(any(UUID.class), any(User.class))).willReturn(1);
 
@@ -105,7 +106,7 @@ public class UserServiceTest {
 
         int insertResult = userService.insertUser(anna);
 
-        verify(fakeDataDao).insertUser(any(UUID.class), captor.capture());
+        verify(fakeDataDao).insertUser(eq(userUid), captor.capture());
 
         User user = captor.getValue();
         assertAnnaFields(user);
